@@ -1,10 +1,10 @@
-var mysql = require("mysql");
+var mysql = require("mysql2");
 var connection = mysql.createConnection({
-  host: "localhost",
+  host: "containers-us-west-168.railway.app",
   user: "root",
-  port: 3306,
-  password: "",
-  database: "pbl5",
+  port: 7335,
+  password: "Zi8GFFe88kt9VLYnAHFg",
+  database: "railway",
 });
 connection.connect(function (err) {
   if (err) {
