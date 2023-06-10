@@ -18,14 +18,14 @@ class InforUserController{
         })
     }
     addStaff(req,res,next){
-        const avatarPath = req.file ? `http://localhost:5000/${req.file.path}` : null;
+        const avatarPath = req.file ? `https://pbl5-server-shpk.onrender.com/${req.file.path}` : null;
         InforUserModel.addStaff(req.body,avatarPath,function(data){
             res.json(data)
         })
     }
     updateStaff(req,res,next){
         const id_Account = req.params.id_Account
-        const avatarPath = req.file ? `http://localhost:5000/${req.file.path}` : null;
+        const avatarPath = req.file ? `https://pbl5-server-shpk.onrender.com/${req.file.path}` : null;
         const data = req.body
         InforUserModel.update(id_Account, avatarPath,data,function(data){
             res.json(data)
@@ -39,7 +39,7 @@ class InforUserController{
     }
     update(req,res,next){
         const id_Account = req.user.id
-        const avatarPath = req.file ? `http://localhost:5000/${req.file.path}` : null;
+        const avatarPath = req.file ? `https://pbl5-server-shpk.onrender.com/${req.file.path}` : null;
         const data = req.body
         InforUserModel.update(id_Account, avatarPath,data,function(data){
             res.json(data)
