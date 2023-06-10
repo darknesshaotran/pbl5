@@ -13,18 +13,21 @@ cart.getCartDetailsbyIdAccount = function (id_Account, results) {
       else {
         var cartID = cart[0].id;
         const query = `SELECT ci.id, ci.id_BookSupplier, ci.id_cart, ci.quantity, 
-                      b.Name, b.Author, b.Price, c.Name as Category,
-                      bs.Import_Price, bs.Amount, 
-                      ib.Image, s.Name as Supplier 
-                      FROM cart_item ci
-                      INNER JOIN book_supplier bs ON ci.id_BookSupplier = bs.id
-                      INNER JOIN book b ON bs.id_Book = b.id
-                      INNER JOIN category c ON c.id = b.id_Category
-                      LEFT JOIN (
-                        SELECT id_Book, Image FROM image_book GROUP BY id_Book
-                      ) ib ON b.id = ib.id_Book
-                      INNER JOIN supplier s ON bs.id_Supplier = s.id
-                      WHERE ci.id_cart = ?`;
+                        b.Name, b.Author, b.Price, c.Name as Category,
+                        bs.Import_Price, bs.Amount, 
+                        MAX(ib.Image) as Image, s.Name as Supplier 
+                        FROM cart_item ci
+                        INNER JOIN book_supplier bs ON ci.id_BookSupplier = bs.id
+                        INNER JOIN book b ON bs.id_Book = b.id
+                        INNER JOIN category c ON c.id = b.id_Category
+                        LEFT JOIN (
+                            SELECT id_Book, Image FROM image_book GROUP BY id_Book
+                        ) ib ON b.id = ib.id_Book
+                        INNER JOIN supplier s ON bs.id_Supplier = s.id
+                        WHERE ci.id_cart = ?
+                        GROUP BY ci.id, ci.id_BookSupplier, ci.id_cart, ci.quantity, 
+                        b.Name, b.Author, b.Price, c.Name, bs.Import_Price, bs.Amount, s.Name
+ `;
         db.query(query, cartID, function (err, cartItem) {
           if (err) return results({ message: err.message });
           else results({ cartItem });
