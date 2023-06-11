@@ -280,7 +280,7 @@ order.getHistoryOrderList = function (id_Account, results) {
                   FROM make_order mo
                   INNER JOIN status s ON mo.id_Status = s.id
                   INNER JOIN payment p ON mo.id_Payment = p.id
-                  WHERE mo.id_Account = 42
+                  WHERE mo.id_Account = ?
                   GROUP BY mo.id
                   ORDER BY mo.id DESC`
                     ;
