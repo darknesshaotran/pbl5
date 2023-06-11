@@ -24,7 +24,7 @@ book.add = function (data, BookPath, results) {
       data.Publisher,
     ],
     function (err, book) {
-      if (err) return err;
+      if (err) return results({success:false, message:err.message});
       else if (BookPath == null)
         return results({
           success: true,
@@ -35,7 +35,7 @@ book.add = function (data, BookPath, results) {
           "INSERT INTO image_book (id_Book, Image) VALUES (?, ?)",
           [book.insertId, BookPath],
           function (err, images) {
-            if (err) return err;
+            if (err) return results({success:false, message:err.message});
             else {
               return results({ success: true, message: "Thêm thành công" });
             }
@@ -131,7 +131,7 @@ book.find = function (data, results) {
 
 book.delete = function (idBook, results) {
   db.query("DELETE FROM book WHERE id =?", idBook, function (err, books) {
-    if (err) return err;
+    if (err) return results({success:false, message:err.message});
     else {
       results({ success: true, message: "Xóa thành công" });
     }
@@ -151,7 +151,7 @@ book.update = function (idBook, data, results) {
       idBook,
     ],
     function (err, books) {
-      if (err) return err;
+      if (err) return results({success:false, message:err.message});
       else {
         results({ success: true, message: "Cập nhật thành công" });
       }

@@ -29,7 +29,7 @@ order.CreateOrderAllCart = function (
     "INSERT INTO make_order (id_Status,id_Account,id_Payment,OrderDate,OrderAddress) VALUES (?, ?, ?, ?, ?)",
     [1, id_Account, payment, today, address],
     function (err, order) {
-      if (err) return err;
+      if (err) return results({success:false, message:err.message});
       else {
         const orderID = order.insertId;
         var totalPrice = 0;
@@ -44,13 +44,13 @@ order.CreateOrderAllCart = function (
               orderItem.Price * orderItem.quantity,
             ],
             function (err, orderitem) {
-              if (err) return err;
+              if (err) return results({success:false, message:err.message});
               else {
                 db.query(
                   "SELECT * FROM book_supplier WHERE id = ?",
                   orderItem.id_BookSupplier,
                   (err, book_supplier) => {
-                    if (err) return err;
+                    if (err) return results({success:false, message:err.message});
                     else {
                       db.query(
                         "UPDATE book_supplier SET Amount =? WHERE id = ?",
@@ -60,13 +60,13 @@ order.CreateOrderAllCart = function (
                           book_supplier[0].id,
                         ],
                         (err, book_suppliers) => {
-                          if (err) return err;
+                          if (err) return results({success:false, message:err.message});
                           else {
                             db.query(
                               "DELETE FROM cart_item WHERE id = ?",
                               orderItem.idCartItem,
                               (err, cartitem) => {
-                                if (err) return err;
+                                if (err) return results({success:false, message:err.message});
                               }
                             );
                           }
@@ -83,7 +83,7 @@ order.CreateOrderAllCart = function (
           `UPDATE make_order SET totalPrice =? WHERE id =?`,
           [totalPrice, orderID],
           function (err, order) {
-            if (err) return err;
+            if (err) return results({success:false, message:err.message});
             else
               return results({
                 success: true,
@@ -114,7 +114,7 @@ order.CreateOrder = function (
       "INSERT INTO make_order (id_Status,id_Account,id_Payment,OrderDate,OrderAddress) VALUES (?, ?, ?, ?, ?)",
       [1, id_Account, payment, today, address],
       function (err, order) {
-        if (err) return err;
+        if (err) return results({success:false, message:err.message});
         else {
           const orderID = order.insertId;
           var totalPrice = 0;
@@ -128,13 +128,13 @@ order.CreateOrder = function (
               orderItem.Price * orderItem.quantity,
             ],
             function (err, orderitem) {
-              if (err) return err;
+              if (err) return results({success:false, message:err.message});
               else {
                 db.query(
                   "SELECT * FROM book_supplier WHERE id = ?",
                   orderItem.id_BookSupplier,
                   (err, book_supplier) => {
-                    if (err) return err;
+                    if (err) return results({success:false, message:err.message});
                     else {
                       console.log(book_supplier);
                       db.query(
@@ -145,7 +145,7 @@ order.CreateOrder = function (
                           book_supplier[0].id,
                         ],
                         (err, book_suppliers) => {
-                          if (err) return err;
+                          if (err) return results({success:false, message:err.message});
                         }
                       );
                     }
@@ -158,7 +158,7 @@ order.CreateOrder = function (
             `UPDATE make_order SET totalPrice =? WHERE id =?`,
             [totalPrice, orderID],
             function (err, order) {
-              if (err) return err;
+              if (err) return results({success:false, message:err.message});
               else
                 return results({
                   success: true,
@@ -305,7 +305,7 @@ order.getOrderList = function (results) {
                     INNER JOIN inforuser i ON i.id_Account = mo.id_Account
                     GROUP BY mo.id DESC`;
   db.query(query, [], function (err, orders) {
-    if (err) return err;
+    if (err) return results({success:false, message:err.message});
     else {
       results(orders);
     }
@@ -317,7 +317,7 @@ order.getStatusOrder = function (id_status, results) {
                     INNER JOIN inforuser i ON i.id_Account = mo.id_Account
                     WHERE mo.id_Status = ? GROUP BY mo.id DESC`;
   db.query(query, [id_status], function (err, orders) {
-    if (err) return err;
+    if (err) return results({success:false, message:err.message});
     else {
       results(orders);
     }
