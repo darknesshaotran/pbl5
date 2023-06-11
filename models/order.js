@@ -368,8 +368,11 @@ order.Revenue = function (data, results) {
                 FROM make_order mo
                 INNER JOIN inforuser i ON i.id_Account = mo.id_Account
                 WHERE mo.id_Status = 3 `;
-  var query2 = `SELECT DATE(OrderDate) AS revenue_date, SUM(totalPrice) AS revenue
-                FROM make_order WHERE id_Status = 3 `;
+  var query2 = `SELECT DATE(o.orderDate) AS revenue_date, SUM(( oi.Fixed_Price - oi.quantity * bs.import_Price)) AS profit, SUM(oi.Fixed_Price) AS revenue
+                FROM make_order o
+                INNER JOIN order_item oi ON o.id = oi.id_Order
+                INNER JOIN book_supplier bs ON oi.id_BookSupplier = bs.id
+                WHERE o.id_Status = 3 `;
 
   if (data.dateMin && data.dateMax) {
     query += `AND DATE(mo.OrderDate) >= '${data.dateMin}'
