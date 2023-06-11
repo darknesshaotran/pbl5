@@ -140,7 +140,7 @@ inforUser.addStaff = function (data, avatarPath, results) {
                   );
                 } else {
                   db.query(
-                    "INSERT INTO inforuser (id_Account,FirstName,LastName,PhoneNumber,Address) VALUES (?, ?, ?, ?, ?)",
+                    "INSERT INTO inforuser (id_Account,FirstName,LastName,PhoneNumber,Address,Avatar) VALUES (?, ?, ?, ?, ?,'')",
                     [
                       user.insertId,
                       data.FirstName,
