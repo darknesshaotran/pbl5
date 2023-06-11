@@ -36,7 +36,7 @@ order.CreateOrderAllCart = function (
         orderItems.forEach((orderItem) => {
           totalPrice += orderItem.Price * orderItem.quantity;
           db.query(
-            `INSERT INTO order_item (id_Order,id_BookSupplier,quantity,Fixed_Price) VALUES (?, ?, ?, ?)`,
+            `INSERT INTO order_item (id_Order,id_BookSupplier,quantity,Fixed_Price,isRated) VALUES (?, ?, ?, ?, 0)`,
             [
               orderID,
               orderItem.id_BookSupplier,
@@ -120,7 +120,7 @@ order.CreateOrder = function (
           var totalPrice = 0;
           totalPrice += orderItem.Price * orderItem.quantity;
           db.query(
-            `INSERT INTO order_item (id_Order,id_BookSupplier,quantity,Fixed_Price) VALUES (?, ?, ?, ?)`,
+            `INSERT INTO order_item (id_Order,id_BookSupplier,quantity,Fixed_Price,isRated) VALUES (?, ?, ?, ?, 0)`,
             [
               orderID,
               orderItem.id_BookSupplier,
@@ -390,7 +390,8 @@ order.Revenue = function (data, results) {
       today.getMonth() + 1
     }-${today.getDate()}'`;
   }
-  query += `GROUP BY mo.id DESC`;
+  query += `GROUP BY mo.id
+            ORDER BY mo.id DESC`;
   query2 += `GROUP BY revenue_date
              ORDER BY revenue_date ASC`;
   db.query(query, [], (err, successOrder) => {
