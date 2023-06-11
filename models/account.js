@@ -29,7 +29,7 @@ account.register = function (data, result) {
                 if (err) result({success: false,message: err.message});
                 else {
                   db.query(
-                    "INSERT INTO inforuser (id_Account,FirstName,LastName,PhoneNumber,Address) VALUES (?, ?, ?, ?, ?)",
+                    "INSERT INTO inforuser (id_Account,FirstName,LastName,PhoneNumber,Address, Avatar) VALUES (?, ?, ?, ?, ?, '')",
 
                     [
                       user.insertId,
