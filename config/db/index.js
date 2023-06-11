@@ -1,10 +1,10 @@
 var mysql = require("mysql2");
 var connection = mysql.createConnection({
-  host: "containers-us-west-168.railway.app",
-  user: "root",
-  port: 7335,
-  password: "Zi8GFFe88kt9VLYnAHFg",
-  database: "railway",
+  host: "bjhgwqf7djeuvlqbsvcv-mysql.services.clever-cloud.com",
+  user: "uimtpiqgv1abifhq",
+  port: 3306,
+  password: "rG3LMLx9eOehvjZFlhOE",
+  database: "bjhgwqf7djeuvlqbsvcv",
 });
 connection.connect(function (err) {
   if (err) {
