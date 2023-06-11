@@ -470,7 +470,7 @@ order.RevenueOfYear = function (results) {
                         RevenueofYear: RevenueofYear[0].total_revenue,
                         potentialCustomer: potentialCustomer[0],
                         TopProduct: TopProduct,
-                        profitOfYear : profit
+                        profitOfYear : profit[0]
                       });
                   })
                 }
