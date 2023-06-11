@@ -26,7 +26,7 @@ order.CreateOrderAllCart = function (
       });
   }
   db.query(
-    "INSERT INTO make_order (id_Status,id_Account,id_Payment,OrderDate,OrderAddress) VALUES (?, ?, ?, ?, ?)",
+    "INSERT INTO make_order (id_Status,id_Account,id_Payment,OrderDate,OrderAddress,totalPrice) VALUES (?, ?, ?, ?, ?,0)",
     [1, id_Account, payment, today, address],
     function (err, order) {
       if (err) return results({success:false, message:err.message});
@@ -111,7 +111,7 @@ order.CreateOrder = function (
     });
   else {
     db.query(
-      "INSERT INTO make_order (id_Status,id_Account,id_Payment,OrderDate,OrderAddress) VALUES (?, ?, ?, ?, ?)",
+      "INSERT INTO make_order (id_Status,id_Account,id_Payment,OrderDate,OrderAddress, totalPrice) VALUES (?, ?, ?, ?, ?, 0)",
       [1, id_Account, payment, today, address],
       function (err, order) {
         if (err) return results({success:false, message:err.message});
@@ -276,12 +276,14 @@ order.GetOrderDetailsbyOrderId = function (id_Order, results) {
 };
 // xem lich su don hang cua 1 tai khoan
 order.getHistoryOrderList = function (id_Account, results) {
-  const query = `SELECT mo.*,s.Status,p.Payment_Method
-                    FROM make_order mo
-                    INNER JOIN status s ON mo.id_Status = s.id
-                    INNER JOIN payment p ON mo.id_Payment = p.id
-                    WHERE mo.id_Account = ? 
-                    GROUP BY mo.id DESC`;
+  const query = `SELECT mo.*, s.Status, p.Payment_Method
+                  FROM make_order mo
+                  INNER JOIN status s ON mo.id_Status = s.id
+                  INNER JOIN payment p ON mo.id_Payment = p.id
+                  WHERE mo.id_Account = 42
+                  GROUP BY mo.id
+                  ORDER BY mo.id DESC`
+                    ;
   db.query(query, [id_Account], function (err, Orders) {
     results({ OrderList: Orders });
   });
@@ -292,7 +294,8 @@ order.getHistoryStatusOrderList = function (id_Account, id_status, results) {
                     INNER JOIN status s ON mo.id_Status = s.id
                     INNER JOIN payment p ON mo.id_Payment = p.id
                     WHERE mo.id_Account = ? AND mo.id_Status = ? 
-                    GROUP BY mo.id DESC`;
+                    GROUP BY mo.id
+                    ORDER BY mo.id DESC`;
   db.query(query, [id_Account, id_status], function (err, Orders) {
     results({ OrderList: Orders });
   });
@@ -303,7 +306,8 @@ order.getOrderList = function (results) {
   const query = `SELECT mo.*,i.id_Account,i.FirstName,i.LastName,i.PhoneNumber,i.Avatar,i.Address
                     FROM make_order mo
                     INNER JOIN inforuser i ON i.id_Account = mo.id_Account
-                    GROUP BY mo.id DESC`;
+                    GROUP BY mo.id
+                   ORDER BY mo.id DESC`;
   db.query(query, [], function (err, orders) {
     if (err) return results({success:false, message:err.message});
     else {
@@ -315,7 +319,9 @@ order.getStatusOrder = function (id_status, results) {
   const query = `SELECT mo.*,i.id_Account,i.FirstName,i.LastName,i.PhoneNumber,i.Avatar,i.Address
                     FROM make_order mo
                     INNER JOIN inforuser i ON i.id_Account = mo.id_Account
-                    WHERE mo.id_Status = ? GROUP BY mo.id DESC`;
+                    WHERE mo.id_Status = ? 
+                    GROUP BY mo.id
+                    ORDER BY mo.id DESC`;
   db.query(query, [id_status], function (err, orders) {
     if (err) return results({success:false, message:err.message});
     else {

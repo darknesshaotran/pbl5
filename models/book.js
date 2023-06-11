@@ -12,6 +12,13 @@ const book = function (book) {
 };
 book.add = function (data, BookPath, results) {
   var today = Date();
+  const year = today.getFullYear();
+  const month = (today.getMonth() + 1).toString().padStart(2, '0');
+  const day = today.getDate().toString().padStart(2, '0');
+
+const formattedDate = `${year}-${month}-${day}`;
+
+console.log(formattedDate);
   db.query(
     "INSERT INTO book (id_Category, Name, Price, Author, Description,Publication_Date,Publisher) VALUES (?, ?, ?, ?, ?, ?, ?)",
     [
@@ -20,7 +27,7 @@ book.add = function (data, BookPath, results) {
       data.Price,
       data.Author,
       data.Description,
-      today,
+      formattedDate,
       data.Publisher,
     ],
     function (err, book) {
@@ -139,14 +146,13 @@ book.delete = function (idBook, results) {
 };
 book.update = function (idBook, data, results) {
   db.query(
-    "UPDATE book SET id_Category =?,Name =?,Price =?,Author =?,Description =?,Publication_Date= ?,Publisher=? WHERE id =?",
+    "UPDATE book SET id_Category =?,Name =?,Price =?,Author =?,Description =?,Publisher=? WHERE id =?",
     [
       data.id_Category,
       data.Name,
       data.Price,
       data.Author,
       data.Description,
-      data.Publication_Date,
       data.Publisher,
       idBook,
     ],

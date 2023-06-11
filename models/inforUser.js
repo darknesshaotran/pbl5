@@ -39,9 +39,9 @@ inforUser.update = function (idAccount, avatarPath, data, results) {
       ],
       (err, result) => {
         if (err) {
-          results({ success: false, message: "failed to update" });
+          results({ success: false, message: "Cập nhập thất bại, vui lòng thử lại !" });
         } else {
-          results({ success: true, message: "updated successfully" });
+          results({ success: true, message: "Cập nhập thành công" });
         }
       }
     );
