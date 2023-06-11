@@ -469,7 +469,7 @@ order.RevenueOfYear = function (results) {
                         NumberOfProducts: YearNumberOfProducts[0].total_books_sold,
                         RevenueofYear: RevenueofYear[0].total_revenue,
                         potentialCustomer: potentialCustomer[0],
-                        profitOfYear : profit[0],
+                        profitOfYear : profit[0].totalProfit,
                         TopProduct: TopProduct,
                         
                       });
