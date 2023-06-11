@@ -443,6 +443,11 @@ order.RevenueOfYear = function (results) {
                     GROUP BY oi.id_BookSupplier
                     ORDER BY total_sold DESC
                     LIMIT 10;`;
+  var query5 = `SELECT SUM( (oi.Fixed_Price - oi.quantity *bs.Import_Price)) AS totalProfit
+                FROM make_order o
+                INNER JOIN order_item oi ON o.id = oi.id_Order
+                INNER JOIN book_supplier bs ON oi.id_BookSupplier = bs.id
+                WHERE YEAR(o.orderDate) = YEAR(CURRENT_DATE)`
   db.query(query1, (err, YearNumberOfProducts) => {
     if (err) return results({ success: false, message: err.message });
     else {
@@ -456,12 +461,20 @@ order.RevenueOfYear = function (results) {
                 if (err)
                   return results({ success: false, message: err.message });
                 else
-                  return results({
-                    NumberOfProducts: YearNumberOfProducts[0].total_books_sold,
-                    RevenueofYear: RevenueofYear[0].total_revenue,
-                    potentialCustomer: potentialCustomer[0],
-                    TopProduct: TopProduct,
-                  });
+                {
+                  db.query(query5,(err,profit)=>{
+                    if (err)
+                      return results({ success: false, message: err.message });
+                      else return results({
+                        NumberOfProducts: YearNumberOfProducts[0].total_books_sold,
+                        RevenueofYear: RevenueofYear[0].total_revenue,
+                        potentialCustomer: potentialCustomer[0],
+                        TopProduct: TopProduct,
+                        profitOfYear : profit
+                      });
+                  })
+                }
+                  
               });
             }
           });
