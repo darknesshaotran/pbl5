@@ -443,11 +443,11 @@ order.RevenueOfYear = function (results) {
                     GROUP BY oi.id_BookSupplier
                     ORDER BY total_sold DESC
                     LIMIT 10;`;
-  var query5 = `SELECT SUM( (oi.Fixed_Price - oi.quantity *bs.Import_Price)) AS totalProfit
-                FROM make_order o
-                INNER JOIN order_item oi ON o.id = oi.id_Order
-                INNER JOIN book_supplier bs ON oi.id_BookSupplier = bs.id
-                WHERE YEAR(o.orderDate) = YEAR(CURRENT_DATE)`
+  var query5 = `SELECT SUM( (oi.Fixed_Price - oi.quantity *bs.Import_Price)) AS totalProfit 
+                FROM make_order o 
+                INNER JOIN order_item oi ON o.id = oi.id_Order 
+                INNER JOIN book_supplier bs ON oi.id_BookSupplier = bs.id 
+                WHERE YEAR(o.orderDate) = 2023 AND o.id_Status = 3`
   db.query(query1, (err, YearNumberOfProducts) => {
     if (err) return results({ success: false, message: err.message });
     else {
