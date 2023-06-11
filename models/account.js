@@ -15,18 +15,18 @@ account.register = function (data, result) {
     "SELECT * FROM account WHERE Username = ?",
     data.Username,
     function (err, users) {
-      if (err) return err;
+      if (err) return result({success: false,message: err.message});
       else if (users.length > 0) {
         result({ success: false, message: "Username đã được sử dụng" });
       } else {
         bcrypt.hash(data.Password, salt, (err, hash) => {
-          if (err) return err;
+          if (err) result({success: false,message: err.message});
           else {
             db.query(
               "INSERT INTO account (Username, Password, id_Role) VALUES (?, ?, ?)",
               [data.Username, hash, data.id_Role],
               function (err, user) {
-                if (err) return err;
+                if (err) result({success: false,message: err.message});
                 else {
                   db.query(
                     "INSERT INTO inforuser (id_Account,FirstName,LastName,PhoneNumber,Address) VALUES (?, ?, ?, ?, ?)",
@@ -39,14 +39,14 @@ account.register = function (data, result) {
                       data.Address,
                     ],
                     function (err, users) {
-                      if (err) return err;
+                      if (err) result({success: false,message: err.message});
                       else {
                         var today = new Date();
                         db.query(
                           "INSERT INTO cart (id_Account,Created_Date) VALUES (?, ?)",
                           [user.insertId, today],
                           function (err, cart) {
-                            if (err) return err;
+                            if (err) result({success: false,message: err.message});
                             else {
                               result({
                                 success: true,
@@ -73,7 +73,7 @@ account.login = function (data, result) {
     data.Username,
     function (err, users) {
       if (err) {
-        return err;
+        result({success: false,message: err.message});
       }
       if (users.length === 0) {
         return result({ success: false, message: "Username not found" });
@@ -86,7 +86,7 @@ account.login = function (data, result) {
         function (err, role) {
           bcrypt.compare(data.Password, user.Password, function (err, results) {
             if (err) {
-              return err;
+              result({success: false,message: err.message});
             }
             if (results === false) {
               return result({ success: false, message: "Wrong password" });
@@ -110,7 +110,7 @@ account.login = function (data, result) {
 account.find = function (id, result) {
   db.query("SELECT * FROM account WHERE id = ?", id, function (err, users) {
     if (err) {
-      return err;
+      result({success: false,message: err.message});
     } else {
       result(users[0].Username);
     }
@@ -119,7 +119,7 @@ account.find = function (id, result) {
 account.changePassWord = function (idAccount, data, results) {
   db.query("SELECT * FROM account WHERE id = ?", idAccount, (err, user) => {
     bcrypt.compare(data.Password, user[0].Password, function (err, result) {
-      if (err) return err;
+      if (err) result({success: false,message: err.message});
       if (result === false)
         return results({ success: false, message: "Mật khẩu cũ không đúng" });
       else if (data.Password == data.NewPassword)
@@ -131,13 +131,13 @@ account.changePassWord = function (idAccount, data, results) {
         return results({ success: false, message: "Không khớp mật khẩu mới" });
       else {
         bcrypt.hash(data.NewPassword, salt, (err, hash) => {
-          if (err) return err;
+          if (err) result({success: false,message: err.message});
           else {
             db.query(
               "UPDATE account SET Password = ? WHERE id =?",
               [hash, idAccount],
               function (err, user) {
-                if (err) return err;
+                if (err) result({success: false,message: err.message});
                 else
                   return results({
                     success: true,
